@@ -1,29 +1,24 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./config/db.js";
+import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
+import pool from "./config/db.js";
 
 dotenv.config();
 
-// Initialize app
 const app = express();
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connect Database
-connectDB();
+// Test DB connection
+pool.connect().then(() => console.log("🔗 PostgreSQL Ready"));
 
 // Routes
 app.use("/api", authRoutes);
 
-// Root route
-app.get("/", (req, res) => {
-  res.send("Secure Authentication System Backend Running...");
-});
+app.get("/", (req, res) =>
+  res.send("Secure Auth System with PostgreSQL Running...")
+);
 
-// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
